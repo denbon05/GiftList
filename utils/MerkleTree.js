@@ -8,7 +8,7 @@ class MerkleTree {
   }
 
   getRoot() {
-    return bytesToHex(this._getRoot(this.leaves));
+    return bytesToHex(this.#getRoot(this.leaves));
   }
 
   getProof(index, layer = this.leaves, proof = []) {
@@ -28,7 +28,7 @@ class MerkleTree {
         newLayer.push(this.concat(left, right));
 
         if (i === index || i === index - 1) {
-          let isLeft = !(index % 2);
+          const isLeft = !(index % 2);
           proof.push({
             data: isLeft ? bytesToHex(right) : bytesToHex(left),
             left: !isLeft,
@@ -37,15 +37,10 @@ class MerkleTree {
       }
     }
 
-    return this.getProof(
-      Math.floor(index / 2),
-      newLayer,
-      proof
-    );
+    return this.getProof(Math.floor(index / 2), newLayer, proof);
   }
 
-  // private function
-  _getRoot(leaves = this.leaves) {
+  #getRoot(leaves = this.leaves) {
     if (leaves.length === 1) {
       return leaves[0];
     }
@@ -63,7 +58,7 @@ class MerkleTree {
       }
     }
 
-    return this._getRoot(layer);
+    return this.#getRoot(layer);
   }
 }
 
